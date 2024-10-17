@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+
+    <div>
+        <h2>Danh sách khuyến mãi</h2>
+        <p>
+            <a class="btn btn-success" style="float: left" th:href="@{/sales/create}">Thêm mới</a>
+
+        <form class="d-flex" style="width: 400px; margin-left: 1000px" id="searchForm" method="get">
+            <input class="form-control me-2" type="search" id="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+        </form>
+        </p>
+    </div>
+
+    <div>
+        <table class="table table-striped" id="results">
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tiêu đề</th>
+                <th>Thời gian bắt đầu</th>
+                <th>Thời gian kết thúc</th>
+                <th>Mức giảm giá</th>
+                <th>Chi tiết</th>
+                <th>Hành Động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sale,status:${sales}">
+                <td th:text="${status.count}"></td>
+                <td th:text="${sale.getTitle()}"></td>
+                <td th:text="${sale.getNewDate()}"></td>
+                <td th:text="${sale.getOverDate()}"></td>
+                <td th:text="${sale.getPrice()}"></td>
+                <td th:text="${sale.getDescription()}"></td>
+                <td class="text-center">
+                    <button class="btn btn-danger" th:onclick="'confirmDelete(' + ${sale.getId()} + ')'">Xoá
+                    </button>
+                    <div class="modal" id="deleteModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Hộp thoại xác nhận xóa</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="deleteMessage"></p>
+                                </div>
+                                <form th:action="@{/sales/delete/__${sale.getId()}__}" method="post"
+                                      class="modal-footer">
+                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    function confirmDelete(id) {
+        document.getElementById('deleteMessage').textContent = `Bạn có muốn xóa khuyến mãi này`;
+        $('#deleteModal').modal('show');
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
